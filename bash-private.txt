@@ -1,0 +1,72 @@
+#git functions
+function gitshowfiles() {  
+	if [ $# -gt 1 ]; then
+		echo "Uasge: FUNCNAME[0]} [COMMIT_HASH]
+		return 
+	fi
+	
+	COMMIT=HEAD
+	if [ $# -eq 1 ]; then
+		COMMIT=$1
+	fi 
+
+	git diff-tree --no-commit-id --name-only -r "{COMMIT} 
+}
+
+function cpatch()
+{ 
+	if [ $# -gt 1 ]; then
+		echo "usage: cpatch [commit-hash]"
+		return 
+	fi 
+
+	COMMIT=HEAD
+	if [ $# -eq 1 ]; then
+		COMMIT=$1
+	fi
+	git show --format=email ${COMMIT} 1 ${HL_LINUX_ROOT}/scripts/checkpatch.pl \
+		--ignore gerrit_change_id \
+	--ignore='FILE_PATH_CHANGES,VSPRINTF_SPECIFIER_PX,VSPRINTF_POINTER_EXTENSION,IF_O,L-NUX VERSION CODE' 
+}
+
+#remove trailing whitespace from list of files
+function ws remove()
+{ 
+	for file in "$@" do
+		if [ ! -f ${file} ]; then
+			echo "file Wile} does not exist"
+			return
+		fi
+		sed 's/[[:space:]]*$//' ${file}
+		echo "Trailing WS removed on ${file}" 
+	done 
+}
+
+function file _ str _replace()
+{
+	if [ $# -ne 2 ]; then
+		echo "please supply 2 arguments"
+		return
+	fi
+	ORIGINAL=$1
+	NEW=$2
+	FILES=$(git grep -wl "${ORIGINAL}");
+	
+	for f in $FILES; do
+		sed "s/\b${ORIGINAL}\b/${NEW}/g" ${f};
+	done 
+}
+ 
+function file_str_replace_partial()
+{
+	if [ $# -ne 2 ]; then
+		echo "please supply 2 arguments"
+		return
+	fi
+	ORIGINAL=$1
+	NEW=$2
+	FILES=$(git grep -wl "${ORIGINAL}");
+	for f in $FILES; do
+		sed -i "s/${ORIGINAL}/${NEW}/g" ${f};
+	done 
+}
