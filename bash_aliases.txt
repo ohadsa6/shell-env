@@ -1,0 +1,3 @@
+alias gitlog='git log --date=short --pretty=format:"%Cred%h%Creset %C(bold blue)%<(20)%an%Creset %Cgreen%ad%Creset %s"'
+alias gl='git log --date=short --pretty=format:"%Cred%h%Creset %C(bold blue)%<(20)%an%Creset %Cgreen%ad%Creset %s" -20'
+alias gg='git grep -n'
